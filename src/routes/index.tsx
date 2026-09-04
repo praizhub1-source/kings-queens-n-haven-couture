@@ -1,24 +1,282 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { categoriesQuery, priceLabel, productsQuery, settingsQuery } from "@/lib/store";
+import { StoreLayout } from "@/components/site/StoreLayout";
+import { ProductCard } from "@/components/site/ProductCard";
+import { Reveal } from "@/components/motion/Reveal";
+import { MagneticButton } from "@/components/motion/MagneticButton";
+import { waLink } from "@/lib/whatsapp";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "King's n Queens Haven Couture — Fragrance & Couture in Accra" },
+      {
+        name: "description",
+        content:
+          "A Ghanaian boutique of signature fragrances, statement footwear and tailored pieces. Order directly on WhatsApp.",
+      },
+      { property: "og:title", content: "King's n Queens Haven Couture" },
+      {
+        property: "og:description",
+        content: "Your style. Your scent. Your presence. Curated couture and fragrance in Accra.",
+      },
+    ],
+  }),
+  component: Home,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Home() {
+  const { data: settings } = useQuery(settingsQuery);
+  const { data: products = [] } = useQuery(productsQuery);
+  const { data: categories = [] } = useQuery(categoriesQuery);
+
+  const symbol = settings?.currency_symbol ?? "GH₵";
+  const featured = products.filter((p) => p.featured).slice(0, 8);
+  const arrivals = products.filter((p) => p.new_arrival).slice(0, 6);
+  const editorial = products.slice(0, 5);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <StoreLayout>
+      {/* HERO */}
+      <section className="relative flex h-dvh min-h-[620px] w-full items-end overflow-hidden bg-forest-deep">
+        {settings?.hero_media_url ? (
+          settings.hero_media_type === "video" ? (
+            <video
+              className="absolute inset-0 h-full w-full object-cover opacity-80"
+              src={settings.hero_media_url}
+              poster={settings.hero_poster_url ?? undefined}
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <img
+              className="absolute inset-0 h-full w-full object-cover opacity-80"
+              src={settings.hero_media_url}
+              alt=""
+            />
+          )
+        ) : editorial[0]?.images?.[0] ? (
+          <img
+            className="absolute inset-0 h-full w-full scale-105 object-cover opacity-55"
+            src={editorial[0].images[0]}
+            alt=""
+          />
+        ) : null}
+        <div className="absolute inset-0 bg-gradient-to-t from-forest-deep via-forest-deep/45 to-forest-deep/70" />
+
+        <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-20 md:px-10 md:pb-28">
+          <p className="kicker overflow-hidden text-champagne">
+            <span className="animate-rise block">Accra · Ghana</span>
+          </p>
+          <h1 className="mt-5 text-ivory">
+            <span className="block overflow-hidden">
+              <span
+                className="animate-rise block text-[13vw] leading-[0.9] tracking-tight md:text-[7.5vw]"
+                style={{ animationDelay: "120ms" }}
+              >
+                {settings?.hero_headline ?? "KING'S N QUEENS"}
+              </span>
+            </span>
+            <span className="block overflow-hidden">
+              <span
+                className="animate-rise block text-[13vw] leading-[0.9] tracking-tight text-champagne md:text-[7.5vw]"
+                style={{ animationDelay: "260ms" }}
+              >
+                {settings?.hero_subheadline ?? "HAVEN COUTURE"}
+              </span>
+            </span>
+          </h1>
+          <div className="mt-8 flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
+            <p className="max-w-sm text-sm leading-relaxed text-ivory/75">
+              {settings?.hero_tagline ?? "Your style. Your scent. Your presence."}
+            </p>
+            <MagneticButton to="/shop" variant="light">
+              {settings?.hero_cta_label ?? "Explore Collection"}
+            </MagneticButton>
+          </div>
+        </div>
+      </section>
+
+      {/* MARQUEE STATEMENT */}
+      <section className="overflow-hidden border-y border-border bg-sand py-6">
+        <div className="marquee-track">
+          {[0, 1].map((k) => (
+            <span key={k} className="display flex shrink-0 items-center gap-10 pr-10 text-2xl md:text-4xl">
+              <span>YOUR STYLE.</span>
+              <span className="text-champagne">✦</span>
+              <span>YOUR SCENT.</span>
+              <span className="text-champagne">✦</span>
+              <span>YOUR PRESENCE.</span>
+              <span className="text-champagne">✦</span>
+            </span>
+          ))}
+        </div>
+      </section>
+
+      {/* CATEGORIES */}
+      {categories.length > 0 && (
+        <section className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-32">
+          <Reveal>
+            <p className="kicker">Shop by</p>
+            <h2 className="mt-3 text-4xl md:text-6xl">The categories</h2>
+          </Reveal>
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {categories.map((cat, i) => {
+              const cover =
+                cat.image_url ?? products.find((p) => p.category_id === cat.id)?.images?.[0];
+              return (
+                <Reveal key={cat.id} delay={i * 90}>
+                  <Link
+                    to="/shop"
+                    search={{ category: cat.slug }}
+                    className="group relative block aspect-[4/5] overflow-hidden bg-sand"
+                  >
+                    {cover && (
+                      <img
+                        src={cover}
+                        alt={cat.name}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-ink/70 to-transparent" />
+                    <div className="absolute bottom-0 left-0 p-7 text-ivory">
+                      <h3 className="text-3xl">{cat.name}</h3>
+                      {cat.description && (
+                        <p className="mt-2 max-w-xs text-xs text-ivory/70">{cat.description}</p>
+                      )}
+                    </div>
+                  </Link>
+                </Reveal>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* FEATURED */}
+      <section className="border-t border-border bg-card px-5 py-24 md:px-10 md:py-32">
+        <div className="mx-auto max-w-[1400px]">
+          <Reveal className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <p className="kicker">Selected</p>
+              <h2 className="mt-3 text-4xl md:text-6xl">Featured pieces</h2>
+            </div>
+            <Link to="/shop" className="link-underline kicker">
+              View all
+            </Link>
+          </Reveal>
+
+          {featured.length === 0 ? (
+            <p className="mt-12 text-sm text-muted-foreground">
+              Featured pieces will appear here once selected in the admin panel.
+            </p>
+          ) : (
+            <div className="mt-12 grid grid-cols-2 gap-x-5 gap-y-12 md:grid-cols-4">
+              {featured.map((p, i) => (
+                <Reveal key={p.id} delay={(i % 4) * 80}>
+                  <ProductCard product={p} categories={categories} symbol={symbol} />
+                </Reveal>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* EDITORIAL HORIZONTAL */}
+      {editorial.length > 0 && (
+        <section className="py-24 md:py-32">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+            <Reveal>
+              <p className="kicker">The fragrance edit</p>
+              <h2 className="mt-3 max-w-2xl text-4xl leading-tight md:text-6xl">
+                A scent is the first thing they remember about you.
+              </h2>
+            </Reveal>
+          </div>
+          <div className="hide-scrollbar mt-12 flex gap-5 overflow-x-auto px-5 pb-4 md:px-10">
+            {editorial.map((p) => (
+              <Link
+                key={p.id}
+                to="/product/$slug"
+                params={{ slug: p.slug }}
+                className="group w-[72vw] shrink-0 md:w-[28vw]"
+              >
+                <div className="aspect-[4/5] overflow-hidden bg-sand">
+                  {p.images?.[0] && (
+                    <img
+                      src={p.images[0]}
+                      alt={p.name}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105"
+                    />
+                  )}
+                </div>
+                <p className="mt-4 text-sm tracking-wide">{p.name}</p>
+                <p className="text-sm text-muted-foreground">{priceLabel(p.price, symbol)}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* NEW ARRIVALS */}
+      {arrivals.length > 0 && (
+        <section className="border-y border-border bg-sand/50 px-5 py-24 md:px-10 md:py-32">
+          <div className="mx-auto max-w-[1400px]">
+            <Reveal>
+              <p className="kicker">Just in</p>
+              <h2 className="mt-3 text-4xl md:text-6xl">New arrivals</h2>
+            </Reveal>
+            <div className="mt-12 grid grid-cols-2 gap-x-5 gap-y-12 md:grid-cols-3">
+              {arrivals.map((p, i) => (
+                <Reveal key={p.id} delay={(i % 3) * 90}>
+                  <ProductCard product={p} categories={categories} symbol={symbol} />
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ABOUT + WHATSAPP */}
+      <section className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-32">
+        <div className="grid items-center gap-14 md:grid-cols-2">
+          <Reveal>
+            <p className="kicker">The house</p>
+            <h2 className="mt-3 text-4xl md:text-5xl">{settings?.about_title ?? "The Haven"}</h2>
+            <p className="mt-6 max-w-lg text-sm leading-loose text-muted-foreground">
+              {settings?.about_body}
+            </p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <MagneticButton to="/about" variant="outline">
+                Our story
+              </MagneticButton>
+              <MagneticButton
+                href={waLink(
+                  settings?.whatsapp_number,
+                  `Hello ${settings?.business_name ?? "King's n Queens Haven Couture"}, I'd like to order.`,
+                )}
+              >
+                Order on WhatsApp
+              </MagneticButton>
+            </div>
+          </Reveal>
+          <Reveal delay={120} className="aspect-[4/5] overflow-hidden bg-sand">
+            {editorial[1]?.images?.[0] && (
+              <img
+                src={editorial[1].images[0]}
+                alt=""
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            )}
+          </Reveal>
+        </div>
+      </section>
+    </StoreLayout>
   );
 }
