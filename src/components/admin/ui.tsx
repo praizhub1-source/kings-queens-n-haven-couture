@@ -59,7 +59,7 @@ export function AdminButton({
   onClick?: () => void;
   type?: "button" | "submit";
   variant?: "solid" | "outline" | "danger" | "ghost";
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   className?: string;
 }) {
   const styles = {
