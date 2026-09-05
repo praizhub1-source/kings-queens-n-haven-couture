@@ -34,69 +34,124 @@ function Home() {
   const symbol = settings?.currency_symbol ?? "GH₵";
   const featured = products.filter((p) => p.featured).slice(0, 8);
   const arrivals = products.filter((p) => p.new_arrival).slice(0, 6);
-  const editorial = products.slice(0, 5);
+
+  const fragranceCategoryIds = categories
+    .filter((c) => /fragran|perfume|scent/i.test(`${c.slug} ${c.name}`))
+    .map((c) => c.id);
+  const fragrances = products.filter((p) =>
+    p.category_id ? fragranceCategoryIds.includes(p.category_id) : false,
+  );
+  const preferred = [
+    "grandior",
+    "nitro",
+    "amber-oud",
+    "borouj-amnesty",
+    "hawas-ice",
+  ];
+  const heroProduct =
+    preferred.map((key) => fragrances.find((p) => p.slug.includes(key))).find(Boolean) ??
+    fragrances[0] ??
+    products[0];
+  const heroImage = settings?.hero_media_url ?? heroProduct?.images?.[0] ?? null;
+  const heroIsVideo = Boolean(settings?.hero_media_url) && settings?.hero_media_type === "video";
+  const editorial = fragrances.length > 0 ? fragrances.slice(0, 6) : products.slice(0, 5);
+
 
   return (
     <StoreLayout>
       {/* HERO */}
-      <section className="relative flex h-dvh min-h-[620px] w-full items-end overflow-hidden bg-forest-deep">
-        {settings?.hero_media_url ? (
-          settings.hero_media_type === "video" ? (
-            <video
-              className="absolute inset-0 h-full w-full object-cover opacity-80"
-              src={settings.hero_media_url}
-              poster={settings.hero_poster_url ?? undefined}
-              autoPlay
-              muted
-              loop
-              playsInline
-            />
-          ) : (
-            <img
-              className="absolute inset-0 h-full w-full object-cover opacity-80"
-              src={settings.hero_media_url}
-              alt=""
-            />
-          )
-        ) : editorial[0]?.images?.[0] ? (
+      <section className="relative flex min-h-dvh w-full items-center overflow-hidden bg-forest-deep pb-16 pt-28 md:pb-24 md:pt-32">
+        {/* ambient atmosphere from the fragrance itself */}
+        {heroImage && !heroIsVideo && (
           <img
-            className="absolute inset-0 h-full w-full scale-105 object-cover opacity-55"
-            src={editorial[0].images[0]}
+            src={heroImage}
             alt=""
+            aria-hidden
+            className="pointer-events-none absolute inset-0 h-full w-full scale-125 object-cover opacity-25 blur-2xl"
           />
-        ) : null}
-        <div className="absolute inset-0 bg-gradient-to-t from-forest-deep via-forest-deep/45 to-forest-deep/70" />
+        )}
+        {heroIsVideo && settings?.hero_media_url && (
+          <video
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-40"
+            src={settings.hero_media_url}
+            poster={settings.hero_poster_url ?? undefined}
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
+        )}
+        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_20%_20%,rgba(255,255,255,0.08),transparent_60%)]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-forest-deep via-forest-deep/70 to-forest-deep/85" />
 
-        <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-20 md:px-10 md:pb-28">
-          <p className="kicker overflow-hidden text-champagne">
-            <span className="animate-rise block">Accra · Ghana</span>
-          </p>
-          <h1 className="mt-5 text-ivory">
-            <span className="block overflow-hidden">
-              <span
-                className="animate-rise block text-[13vw] leading-[0.9] tracking-tight md:text-[7.5vw]"
-                style={{ animationDelay: "120ms" }}
-              >
-                {settings?.hero_headline ?? "KING'S N QUEENS"}
+        <div className="relative mx-auto grid w-full max-w-[1400px] items-center gap-12 px-5 md:grid-cols-[1.05fr_0.95fr] md:gap-16 md:px-10">
+          <div>
+            <p className="kicker overflow-hidden text-champagne">
+              <span className="animate-rise block">Accra · Ghana — The Fragrance House</span>
+            </p>
+            <h1 className="mt-5 text-ivory">
+              <span className="block overflow-hidden">
+                <span
+                  className="animate-rise block text-[13vw] leading-[0.9] tracking-tight md:text-[5.4vw]"
+                  style={{ animationDelay: "120ms" }}
+                >
+                  {settings?.hero_headline ?? "KING'S N QUEENS"}
+                </span>
               </span>
-            </span>
-            <span className="block overflow-hidden">
-              <span
-                className="animate-rise block text-[13vw] leading-[0.9] tracking-tight text-champagne md:text-[7.5vw]"
-                style={{ animationDelay: "260ms" }}
-              >
-                {settings?.hero_subheadline ?? "HAVEN COUTURE"}
+              <span className="block overflow-hidden">
+                <span
+                  className="animate-rise block text-[13vw] leading-[0.9] tracking-tight text-champagne md:text-[5.4vw]"
+                  style={{ animationDelay: "260ms" }}
+                >
+                  {settings?.hero_subheadline ?? "HAVEN COUTURE"}
+                </span>
               </span>
-            </span>
-          </h1>
-          <div className="mt-8 flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
-            <p className="max-w-sm text-sm leading-relaxed text-ivory/75">
+            </h1>
+            <p className="mt-8 max-w-md text-sm leading-relaxed text-ivory/75">
               {settings?.hero_tagline ?? "Your style. Your scent. Your presence."}
             </p>
-            <MagneticButton to="/shop" variant="light">
-              {settings?.hero_cta_label ?? "Explore Collection"}
-            </MagneticButton>
+            <div className="mt-9 flex flex-wrap items-center gap-4">
+              <MagneticButton to={settings?.hero_cta_link ?? "/shop"} variant="light">
+                {settings?.hero_cta_label ?? "Explore Collection"}
+              </MagneticButton>
+              {heroProduct && (
+                <Link
+                  to="/product/$slug"
+                  params={{ slug: heroProduct.slug }}
+                  className="link-underline text-[0.68rem] uppercase tracking-[0.28em] text-ivory/70"
+                >
+                  Discover {heroProduct.name}
+                </Link>
+              )}
+            </div>
           </div>
+
+          {/* Editorial fragrance plinth */}
+          {heroImage && !heroIsVideo && (
+            <div className="animate-rise relative" style={{ animationDelay: "380ms" }}>
+              <div className="absolute -inset-6 rounded-[999px] bg-champagne/10 blur-3xl md:-inset-10" />
+              <div className="relative mx-auto aspect-[4/5] w-full max-w-[440px] overflow-hidden border border-ivory/15 bg-gradient-to-b from-ivory/10 to-transparent">
+                <img
+                  src={heroImage}
+                  alt={heroProduct?.name ?? "Signature fragrance"}
+                  className="h-full w-full object-cover transition-transform duration-[1600ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105"
+                />
+                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-forest-deep/90 to-transparent p-5">
+                  <div>
+                    <p className="text-[0.6rem] uppercase tracking-[0.3em] text-champagne">
+                      The signature
+                    </p>
+                    <p className="mt-1 text-lg text-ivory">
+                      {heroProduct?.name ?? "Signature fragrance"}
+                    </p>
+                  </div>
+                  <span className="hidden text-[0.6rem] uppercase tracking-[0.24em] text-ivory/60 sm:block">
+                    Eau de parfum
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

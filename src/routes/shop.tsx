@@ -8,7 +8,7 @@ import { ProductCard } from "@/components/site/ProductCard";
 import { Reveal } from "@/components/motion/Reveal";
 import { cn } from "@/lib/utils";
 
-type ShopSearch = { category?: string };
+type ShopSearch = { category?: string | undefined };
 
 export const Route = createFileRoute("/shop")({
   validateSearch: (search: Record<string, unknown>): ShopSearch => ({

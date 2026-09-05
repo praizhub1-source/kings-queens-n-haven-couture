@@ -5,7 +5,7 @@ export type OrderDetails = {
   name: string;
   phone: string;
   location: string;
-  note?: string;
+  note?: string | undefined;
 };
 
 export function buildOrderMessage({
