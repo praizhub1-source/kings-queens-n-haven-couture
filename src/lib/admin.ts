@@ -16,7 +16,7 @@ export async function uploadMedia(file: File, folder = "products") {
   const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, {
     cacheControl: "31536000",
     upsert: false,
-    contentType: file.type || undefined,
+    ...(file.type ? { contentType: file.type } : {}),
   });
   if (error) throw error;
   return `/api/public/media/${path}`;
