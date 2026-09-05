@@ -34,7 +34,28 @@ function Home() {
   const symbol = settings?.currency_symbol ?? "GH₵";
   const featured = products.filter((p) => p.featured).slice(0, 8);
   const arrivals = products.filter((p) => p.new_arrival).slice(0, 6);
-  const editorial = products.slice(0, 5);
+
+  const fragranceCategoryIds = categories
+    .filter((c) => /fragran|perfume|scent/i.test(`${c.slug} ${c.name}`))
+    .map((c) => c.id);
+  const fragrances = products.filter((p) =>
+    p.category_id ? fragranceCategoryIds.includes(p.category_id) : false,
+  );
+  const preferred = [
+    "grandior",
+    "nitro",
+    "amber-oud",
+    "borouj-amnesty",
+    "hawas-ice",
+  ];
+  const heroProduct =
+    preferred.map((key) => fragrances.find((p) => p.slug.includes(key))).find(Boolean) ??
+    fragrances[0] ??
+    products[0];
+  const heroImage = settings?.hero_media_url ?? heroProduct?.images?.[0] ?? null;
+  const heroIsVideo = Boolean(settings?.hero_media_url) && settings?.hero_media_type === "video";
+  const editorial = fragrances.length > 0 ? fragrances.slice(0, 6) : products.slice(0, 5);
+
 
   return (
     <StoreLayout>
