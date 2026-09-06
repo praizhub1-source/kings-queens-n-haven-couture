@@ -21,6 +21,16 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "Your style. Your scent. Your presence. Curated couture and fragrance in Accra.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [
+      {
+        rel: "preload",
+        as: "image",
+        href: "https://files.catbox.moe/a2e9g6.jpg",
+        fetchPriority: "high",
+      },
     ],
   }),
   component: Home,
@@ -59,58 +69,52 @@ function Home() {
 
   return (
     <StoreLayout>
-      {/* HERO */}
-      <section className="relative flex min-h-dvh w-full items-center overflow-hidden bg-forest-deep pb-16 pt-28 md:pb-24 md:pt-32">
-        {/* ambient atmosphere from the fragrance itself */}
+      {/* Full-bleed fragrance campaign */}
+      <section className="relative flex min-h-[100svh] w-full items-end overflow-hidden bg-forest-deep pb-14 pt-28 md:pb-20 md:pt-32">
         {heroImage && !heroIsVideo && (
           <img
             src={heroImage}
-            alt=""
-            aria-hidden
-            className="pointer-events-none absolute inset-0 h-full w-full scale-125 object-cover opacity-25 blur-2xl"
+            alt={heroProduct?.name ?? "Grandior Solaire fragrance"}
+            fetchPriority="high"
+            loading="eager"
+            decoding="async"
+            sizes="100vw"
+            className="absolute inset-0 h-full w-full scale-[1.035] object-cover object-[58%_center] motion-safe:animate-[kq-hero-in_1.8s_cubic-bezier(0.22,1,0.36,1)_both] md:object-[64%_48%]"
           />
         )}
         {heroIsVideo && settings?.hero_media_url && (
           <video
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-40"
+            className="absolute inset-0 h-full w-full object-cover object-center"
             src={settings.hero_media_url}
             poster={settings.hero_poster_url ?? undefined}
+            preload="metadata"
             autoPlay
             muted
             loop
             playsInline
           />
         )}
-        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_20%_20%,rgba(255,255,255,0.08),transparent_60%)]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-forest-deep via-forest-deep/70 to-forest-deep/85" />
+        <div className="absolute inset-0 bg-gradient-to-r from-forest-deep via-forest-deep/70 to-transparent md:via-forest-deep/35" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-transparent to-ink/35" />
+        <div className="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-ivory/10 to-transparent" />
 
-        <div className="relative mx-auto grid w-full max-w-[1400px] items-center gap-12 px-5 md:grid-cols-[1.05fr_0.95fr] md:gap-16 md:px-10">
-          <div>
-            <p className="kicker overflow-hidden text-champagne">
-              <span className="animate-rise block">Accra · Ghana — The Fragrance House</span>
+        <div className="relative mx-auto w-full max-w-[1400px] px-5 md:px-10">
+          <div className="max-w-[760px]">
+            <p className="kicker animate-rise overflow-hidden text-champagne">
+              Accra · Ghana — The Fragrance House
             </p>
             <h1 className="mt-5 text-ivory">
-              <span className="block overflow-hidden">
-                <span
-                  className="animate-rise block text-[13vw] leading-[0.9] tracking-tight md:text-[5.4vw]"
-                  style={{ animationDelay: "120ms" }}
-                >
-                  {settings?.hero_headline ?? "KING'S N QUEENS"}
-                </span>
+              <span className="animate-rise block text-[3.35rem] leading-[0.84] sm:text-7xl md:text-[7rem]" style={{ animationDelay: "100ms" }}>
+                {settings?.hero_headline ?? "KING'S N QUEENS"}
               </span>
-              <span className="block overflow-hidden">
-                <span
-                  className="animate-rise block text-[13vw] leading-[0.9] tracking-tight text-champagne md:text-[5.4vw]"
-                  style={{ animationDelay: "260ms" }}
-                >
-                  {settings?.hero_subheadline ?? "HAVEN COUTURE"}
-                </span>
+              <span className="animate-rise mt-2 block text-[3.15rem] leading-[0.84] text-champagne sm:text-7xl md:text-[6.5rem]" style={{ animationDelay: "220ms" }}>
+                {settings?.hero_subheadline ?? "HAVEN COUTURE"}
               </span>
             </h1>
-            <p className="mt-8 max-w-md text-sm leading-relaxed text-ivory/75">
+            <p className="animate-rise mt-7 max-w-md text-sm leading-relaxed text-ivory/80" style={{ animationDelay: "320ms" }}>
               {settings?.hero_tagline ?? "Your style. Your scent. Your presence."}
             </p>
-            <div className="mt-9 flex flex-wrap items-center gap-4">
+            <div className="animate-rise mt-8 flex flex-col items-start gap-5 sm:flex-row sm:items-center" style={{ animationDelay: "400ms" }}>
               <MagneticButton to={settings?.hero_cta_link ?? "/shop"} variant="light">
                 {settings?.hero_cta_label ?? "Explore Collection"}
               </MagneticButton>
@@ -118,40 +122,17 @@ function Home() {
                 <Link
                   to="/product/$slug"
                   params={{ slug: heroProduct.slug }}
-                  className="link-underline text-[0.68rem] uppercase tracking-[0.28em] text-ivory/70"
+                  className="link-underline text-[0.68rem] uppercase tracking-[0.28em] text-ivory/80"
                 >
                   Discover {heroProduct.name}
                 </Link>
               )}
             </div>
           </div>
-
-          {/* Editorial fragrance plinth */}
-          {heroImage && !heroIsVideo && (
-            <div className="animate-rise relative" style={{ animationDelay: "380ms" }}>
-              <div className="absolute -inset-6 rounded-[999px] bg-champagne/10 blur-3xl md:-inset-10" />
-              <div className="relative mx-auto aspect-[4/5] w-full max-w-[440px] overflow-hidden border border-ivory/15 bg-gradient-to-b from-ivory/10 to-transparent">
-                <img
-                  src={heroImage}
-                  alt={heroProduct?.name ?? "Signature fragrance"}
-                  className="h-full w-full object-cover transition-transform duration-[1600ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105"
-                />
-                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-forest-deep/90 to-transparent p-5">
-                  <div>
-                    <p className="text-[0.6rem] uppercase tracking-[0.3em] text-champagne">
-                      The signature
-                    </p>
-                    <p className="mt-1 text-lg text-ivory">
-                      {heroProduct?.name ?? "Signature fragrance"}
-                    </p>
-                  </div>
-                  <span className="hidden text-[0.6rem] uppercase tracking-[0.24em] text-ivory/60 sm:block">
-                    Eau de parfum
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
+          <div className="mt-12 flex items-center justify-between border-t border-ivory/20 pt-4 text-ivory/60">
+            <span className="text-[0.58rem] uppercase tracking-[0.28em]">Signature fragrance</span>
+            <span className="hidden text-[0.58rem] uppercase tracking-[0.28em] sm:block">Scroll to discover</span>
+          </div>
         </div>
       </section>
 
@@ -194,6 +175,8 @@ function Home() {
                         src={cover}
                         alt={cat.name}
                         loading="lazy"
+                        decoding="async"
+                        sizes="(min-width: 768px) 33vw, 100vw"
                         className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110"
                       />
                     )}
@@ -266,6 +249,8 @@ function Home() {
                       src={p.images[0]}
                       alt={p.name}
                       loading="lazy"
+                      decoding="async"
+                      sizes="(min-width: 768px) 28vw, 72vw"
                       className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105"
                     />
                   )}
@@ -326,6 +311,8 @@ function Home() {
                 src={editorial[1].images[0]}
                 alt=""
                 loading="lazy"
+                decoding="async"
+                sizes="(min-width: 768px) 50vw, 100vw"
                 className="h-full w-full object-cover"
               />
             )}

@@ -90,6 +90,9 @@ function ProductDetail() {
                 <img
                   src={product.images[active]}
                   alt={product.name}
+                  fetchPriority="high"
+                  decoding="async"
+                  sizes="(min-width: 768px) 50vw, 100vw"
                   className="h-full w-full object-cover"
                 />
               ) : (
@@ -107,7 +110,7 @@ function ProductDetail() {
                       i === active ? "border-forest" : "border-transparent",
                     )}
                   >
-                    <img src={img} alt="" className="h-full w-full object-cover" />
+                    <img src={img} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
                   </button>
                 ))}
               </div>

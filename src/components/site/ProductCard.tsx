@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { Plus } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { priceLabel, type Category, type Product } from "@/lib/store";
@@ -20,6 +21,7 @@ export function ProductCard({
   const category = categories?.find((c) => c.id === product.category_id);
   const image = product.images?.[0] ?? null;
   const secondary = product.images?.[1] ?? null;
+  const [showSecondary, setShowSecondary] = useState(false);
 
   return (
     <article className={cn("group relative flex flex-col", className)}>
@@ -27,6 +29,7 @@ export function ProductCard({
         to="/product/$slug"
         params={{ slug: product.slug }}
         className="relative block overflow-hidden bg-sand"
+        onPointerEnter={() => secondary && setShowSecondary(true)}
       >
         <div className="aspect-[3/4] w-full overflow-hidden">
           {image ? (
@@ -34,6 +37,8 @@ export function ProductCard({
               src={image}
               alt={product.name}
               loading="lazy"
+              decoding="async"
+              sizes="(min-width: 768px) 25vw, 50vw"
               className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
             />
           ) : (
@@ -41,11 +46,13 @@ export function ProductCard({
               Image coming soon
             </div>
           )}
-          {secondary && (
+          {secondary && showSecondary && (
             <img
               src={secondary}
               alt=""
               loading="lazy"
+              decoding="async"
+              sizes="(min-width: 768px) 25vw, 50vw"
               aria-hidden
               className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700 group-hover:opacity-100"
             />
