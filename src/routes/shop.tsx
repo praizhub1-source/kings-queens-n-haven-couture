@@ -47,6 +47,7 @@ function Shop() {
   const { data: settings } = useQuery(settingsQuery);
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<(typeof sorts)[number]["key"]>("curated");
+  const [visibleCount, setVisibleCount] = useState(8);
 
   const activeCat = categories.find((c) => c.slug === category);
 
@@ -140,7 +141,7 @@ function Shop() {
           </p>
         ) : (
           <div className="mt-14 grid grid-cols-2 gap-x-5 gap-y-14 md:grid-cols-4">
-            {list.map((p, i) => (
+            {list.slice(0, visibleCount).map((p, i) => (
               <Reveal key={p.id} delay={(i % 4) * 70}>
                 <ProductCard
                   product={p}
@@ -149,6 +150,17 @@ function Shop() {
                 />
               </Reveal>
             ))}
+          </div>
+        )}
+        {list.length > visibleCount && (
+          <div className="mt-14 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setVisibleCount((count) => count + 8)}
+              className="rounded-full border border-ink/25 px-7 py-3 text-[0.66rem] uppercase tracking-[0.24em] transition-colors hover:border-forest hover:text-forest"
+            >
+              Load more
+            </button>
           </div>
         )}
       </section>

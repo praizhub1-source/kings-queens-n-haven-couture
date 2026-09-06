@@ -41,7 +41,7 @@ function About() {
 
         <div className="mt-16 grid gap-14 md:grid-cols-2">
           <Reveal className="aspect-[4/5] overflow-hidden bg-sand">
-            {cover && <img src={cover} alt="" className="h-full w-full object-cover" />}
+            {cover && <img src={cover} alt="" loading="lazy" decoding="async" sizes="(min-width: 768px) 50vw, 100vw" className="h-full w-full object-cover" />}
           </Reveal>
           <Reveal delay={120} className="md:pt-10">
             <p className="text-base leading-loose text-muted-foreground">{settings?.about_body}</p>

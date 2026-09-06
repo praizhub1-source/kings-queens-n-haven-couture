@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, ShoppingBag, X } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,8 @@ export function Header() {
   const { count, openCart } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const onHome = useRouterState({ select: (state) => state.location.pathname === "/" });
+  const overHero = onHome && !scrolled;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -39,7 +41,7 @@ export function Header() {
     >
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-5 md:h-20 md:px-10">
         <button
-          className="flex items-center gap-2 text-ink md:hidden"
+          className={cn("flex items-center gap-2 md:hidden", overHero ? "text-ivory" : "text-ink")}
           onClick={() => setMenuOpen(true)}
           aria-label="Open menu"
         >
@@ -51,7 +53,10 @@ export function Header() {
             <Link
               key={l.to}
               to={l.to}
-              className="link-underline text-[0.68rem] uppercase tracking-[0.3em] text-ink/80 transition-colors hover:text-ink"
+              className={cn(
+                "link-underline text-[0.68rem] uppercase tracking-[0.3em] transition-colors",
+                overHero ? "text-ivory/80 hover:text-ivory" : "text-ink/80 hover:text-ink",
+              )}
               activeProps={{ "data-active": "true" }}
               activeOptions={{ exact: l.to === "/" }}
             >
@@ -60,7 +65,7 @@ export function Header() {
           ))}
         </nav>
 
-        <Link to="/" className="absolute left-1/2 -translate-x-1/2 text-center">
+        <Link to="/" className={cn("absolute left-1/2 -translate-x-1/2 text-center transition-colors", overHero ? "text-ivory" : "text-ink")}>
           <span className="display block text-base leading-none tracking-[0.18em] md:text-xl">
             KING&apos;S N QUEENS
           </span>
@@ -69,7 +74,7 @@ export function Header() {
 
         <button
           onClick={openCart}
-          className="relative flex items-center gap-2 text-ink transition-opacity hover:opacity-70"
+          className={cn("relative flex items-center gap-2 transition-opacity hover:opacity-70", overHero ? "text-ivory" : "text-ink")}
           aria-label="Open cart"
         >
           <ShoppingBag className="h-5 w-5" />
