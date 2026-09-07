@@ -47,6 +47,51 @@ export type Database = {
         }
         Relationships: []
       }
+      ownership_transfers: {
+        Row: {
+          accepted_at: string | null
+          cancelled_at: string | null
+          confirmed_at: string | null
+          created_at: string
+          expires_at: string
+          from_user: string
+          id: string
+          previous_owner_action: string
+          status: string
+          to_email: string
+          to_user: string | null
+          updated_at: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          cancelled_at?: string | null
+          confirmed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          from_user: string
+          id?: string
+          previous_owner_action?: string
+          status?: string
+          to_email: string
+          to_user?: string | null
+          updated_at?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          cancelled_at?: string | null
+          confirmed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          from_user?: string
+          id?: string
+          previous_owner_action?: string
+          status?: string
+          to_email?: string
+          to_user?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category_id: string | null
@@ -108,6 +153,72 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      staff_invites: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          invited_by: string | null
+          revoked_at: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          invited_by?: string | null
+          revoked_at?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          invited_by?: string | null
+          revoked_at?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+        }
+        Relationships: []
       }
       store_settings: {
         Row: {
@@ -214,9 +325,11 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_owner: { Args: { _user_id: string }; Returns: boolean }
+      is_staff: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      app_role: "admin"
+      app_role: "owner" | "admin" | "staff"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -344,7 +457,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin"],
+      app_role: ["owner", "admin", "staff"],
     },
   },
 } as const
