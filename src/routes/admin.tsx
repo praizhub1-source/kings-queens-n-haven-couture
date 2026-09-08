@@ -2,10 +2,11 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { LayoutDashboard, Package, Tags, Image, Settings, LogOut, Plus, Pencil, Trash2 } from "lucide-react";
+import { LayoutDashboard, Package, Tags, Image, Settings, LogOut, Plus, Pencil, Trash2, Users, UserCog } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { ensureAdmin } from "@/lib/admin.functions";
+import { getMyAccess } from "@/lib/admin.functions";
+import { TeamPanel, AccountPanel } from "@/components/admin/TeamPanel";
 import { uploadMedia } from "@/lib/admin";
 import { categoriesQuery, productsQuery, settingsQuery, slugify, type Category, type Product, type StoreSettings } from "@/lib/store";
 import { AdminButton, Confirm, EmptyState, Field, Modal, Panel, inputClass } from "@/components/admin/ui";
@@ -27,7 +28,8 @@ export const Route = createFileRoute("/admin")({
   component: AdminPage,
 });
 
-type Tab = "overview" | "products" | "categories" | "homepage" | "settings";
+type Tab = "overview" | "products" | "categories" | "homepage" | "settings" | "team" | "account";
+type Access = { role: "owner" | "admin" | "staff" | null; userId: string; email: string | null; displayName: string | null };
 type ProductDraft = {
   id?: string; name: string; slug: string; description: string; category_id: string;
   price: string; stock_quantity: string; display_order: string; images: string;
@@ -37,9 +39,10 @@ const emptyProduct: ProductDraft = { name: "", slug: "", description: "", catego
 
 function AdminPage() {
   const navigate = useNavigate();
-  const checkAdmin = useServerFn(ensureAdmin);
+  const checkAdmin = useServerFn(getMyAccess);
   const queryClient = useQueryClient();
   const [access, setAccess] = useState<"checking" | "allowed" | "denied">("checking");
+  const [me, setMe] = useState<Access | null>(null);
   const [tab, setTab] = useState<Tab>("overview");
   const { data: products = [] } = useQuery({ ...productsQuery, enabled: access === "allowed" });
   const { data: categories = [] } = useQuery({ ...categoriesQuery, enabled: access === "allowed" });
@@ -55,8 +58,9 @@ function AdminPage() {
       try {
         const result = await checkAdmin();
         if (!active) return;
-        if (!result.isAdmin) setAccess("denied");
+        if (!result.isStaff) setAccess("denied");
         else {
+          setMe({ role: result.role, userId: result.userId, email: result.email, displayName: result.displayName });
           setAccess("allowed");
           await Promise.all([
             queryClient.invalidateQueries({ queryKey: ["products"] }),
@@ -77,6 +81,8 @@ function AdminPage() {
   const nav = [
     ["overview", "Overview", LayoutDashboard], ["products", "Products", Package],
     ["categories", "Categories", Tags], ["homepage", "Homepage", Image], ["settings", "Settings", Settings],
+    ...(me?.role === "owner" || me?.role === "admin" ? [["team", "Team", Users] as const] : []),
+    ["account", "Account", UserCog],
   ] as const;
 
   return (
@@ -100,6 +106,10 @@ function AdminPage() {
           {tab === "categories" && <Categories categories={categories} />}
           {tab === "homepage" && settings && <SettingsForm settings={settings} mode="homepage" />}
           {tab === "settings" && settings && <SettingsForm settings={settings} mode="store" />}
+          {tab === "team" && me && <TeamPanel role={me.role} userId={me.userId} />}
+          {tab === "account" && me && (
+            <AccountPanel email={me.email} displayName={me.displayName} userId={me.userId} />
+          )}
         </main>
       </div>
     </div>
