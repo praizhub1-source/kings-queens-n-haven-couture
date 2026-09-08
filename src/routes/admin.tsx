@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { LayoutDashboard, Package, Tags, Image, Settings, LogOut, Plus, Pencil, Trash2 } from "lucide-react";
+import { LayoutDashboard, Package, Tags, Image, Settings, LogOut, Plus, Pencil, Trash2, Users, UserCog } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { getMyAccess } from "@/lib/admin.functions";
@@ -81,6 +81,8 @@ function AdminPage() {
   const nav = [
     ["overview", "Overview", LayoutDashboard], ["products", "Products", Package],
     ["categories", "Categories", Tags], ["homepage", "Homepage", Image], ["settings", "Settings", Settings],
+    ...(me?.role === "owner" || me?.role === "admin" ? [["team", "Team", Users] as const] : []),
+    ["account", "Account", UserCog],
   ] as const;
 
   return (
@@ -104,6 +106,10 @@ function AdminPage() {
           {tab === "categories" && <Categories categories={categories} />}
           {tab === "homepage" && settings && <SettingsForm settings={settings} mode="homepage" />}
           {tab === "settings" && settings && <SettingsForm settings={settings} mode="store" />}
+          {tab === "team" && me && <TeamPanel role={me.role} userId={me.userId} />}
+          {tab === "account" && me && (
+            <AccountPanel email={me.email} displayName={me.displayName} userId={me.userId} />
+          )}
         </main>
       </div>
     </div>
