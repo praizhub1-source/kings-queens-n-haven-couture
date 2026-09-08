@@ -28,7 +28,8 @@ export const Route = createFileRoute("/admin")({
   component: AdminPage,
 });
 
-type Tab = "overview" | "products" | "categories" | "homepage" | "settings";
+type Tab = "overview" | "products" | "categories" | "homepage" | "settings" | "team" | "account";
+type Access = { role: "owner" | "admin" | "staff" | null; userId: string; email: string | null; displayName: string | null };
 type ProductDraft = {
   id?: string; name: string; slug: string; description: string; category_id: string;
   price: string; stock_quantity: string; display_order: string; images: string;
