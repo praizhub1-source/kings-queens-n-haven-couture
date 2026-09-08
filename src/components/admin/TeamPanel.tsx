@@ -324,7 +324,7 @@ export function AccountPanel({
     setBusy("name");
     const { error } = await supabase.from("profiles").update({ display_name: name.trim() || null }).eq("user_id", userId);
     setBusy(null);
-    if (error) return onError(error);
+    if (error) { onError(error); return; }
     toast.success("Name saved");
   };
 
@@ -333,17 +333,17 @@ export function AccountPanel({
     setBusy("email");
     const { error } = await supabase.auth.updateUser({ email: newEmail.trim() });
     setBusy(null);
-    if (error) return onError(error);
+    if (error) { onError(error); return; }
     toast.success("Check your inbox to confirm the new email address.");
   };
 
   const savePassword = async (e: FormEvent) => {
     e.preventDefault();
-    if (password.length < 8) return toast.error("Use at least 8 characters.");
+    if (password.length < 8) { toast.error("Use at least 8 characters."); return; }
     setBusy("password");
     const { error } = await supabase.auth.updateUser({ password });
     setBusy(null);
-    if (error) return onError(error);
+    if (error) { onError(error); return; }
     setPassword("");
     toast.success("Password updated");
   };
@@ -353,7 +353,7 @@ export function AccountPanel({
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth`,
     });
-    if (error) return onError(error);
+    if (error) { onError(error); return; }
     toast.success("Password reset link sent");
   };
 
