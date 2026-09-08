@@ -39,9 +39,10 @@ const emptyProduct: ProductDraft = { name: "", slug: "", description: "", catego
 
 function AdminPage() {
   const navigate = useNavigate();
-  const checkAdmin = useServerFn(ensureAdmin);
+  const checkAdmin = useServerFn(getMyAccess);
   const queryClient = useQueryClient();
   const [access, setAccess] = useState<"checking" | "allowed" | "denied">("checking");
+  const [me, setMe] = useState<Access | null>(null);
   const [tab, setTab] = useState<Tab>("overview");
   const { data: products = [] } = useQuery({ ...productsQuery, enabled: access === "allowed" });
   const { data: categories = [] } = useQuery({ ...categoriesQuery, enabled: access === "allowed" });
