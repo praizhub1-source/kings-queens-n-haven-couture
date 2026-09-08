@@ -58,8 +58,9 @@ function AdminPage() {
       try {
         const result = await checkAdmin();
         if (!active) return;
-        if (!result.isAdmin) setAccess("denied");
+        if (!result.isStaff) setAccess("denied");
         else {
+          setMe({ role: result.role, userId: result.userId, email: result.email, displayName: result.displayName });
           setAccess("allowed");
           await Promise.all([
             queryClient.invalidateQueries({ queryKey: ["products"] }),
