@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { priceLabel, type Category, type Product } from "@/lib/store";
+import { SmartImage } from "./SmartImage";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -11,11 +12,14 @@ export function ProductCard({
   categories,
   symbol = "GH₵",
   className,
+  priority = false,
 }: {
   product: Product;
   categories?: Category[];
   symbol?: string;
   className?: string;
+  /** True for cards visible on first paint (first row) — loads immediately. */
+  priority?: boolean;
 }) {
   const { add } = useCart();
   const category = categories?.find((c) => c.id === product.category_id);
@@ -31,30 +35,21 @@ export function ProductCard({
         className="relative block overflow-hidden bg-sand"
         onPointerEnter={() => secondary && setShowSecondary(true)}
       >
-        <div className="aspect-[3/4] w-full overflow-hidden">
-          {image ? (
-            <img
-              src={image}
-              alt={product.name}
-              loading="lazy"
-              decoding="async"
-              sizes="(min-width: 768px) 25vw, 50vw"
-              className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-xs uppercase tracking-[0.3em] text-muted-foreground">
-              Image coming soon
-            </div>
-          )}
+        <div className="relative aspect-[3/4] w-full overflow-hidden">
+          <SmartImage
+            src={image}
+            alt={product.name}
+            priority={priority}
+            sizes="(min-width: 768px) 25vw, 50vw"
+            className="transition-transform duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
+          />
           {secondary && showSecondary && (
-            <img
+            <SmartImage
               src={secondary}
               alt=""
-              loading="lazy"
-              decoding="async"
+              ariaHidden
               sizes="(min-width: 768px) 25vw, 50vw"
-              aria-hidden
-              className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+              className="absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-100"
             />
           )}
         </div>
