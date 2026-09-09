@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { priceLabel, type Category, type Product } from "@/lib/store";
+import { SmartImage } from "./SmartImage";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -11,11 +12,14 @@ export function ProductCard({
   categories,
   symbol = "GH₵",
   className,
+  priority = false,
 }: {
   product: Product;
   categories?: Category[];
   symbol?: string;
   className?: string;
+  /** True for cards visible on first paint (first row) — loads immediately. */
+  priority?: boolean;
 }) {
   const { add } = useCart();
   const category = categories?.find((c) => c.id === product.category_id);
