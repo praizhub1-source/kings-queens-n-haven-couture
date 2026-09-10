@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fff1b0"/>
+      <stop offset="25%" stop-color="#d9a441"/>
+      <stop offset="55%" stop-color="#fff0a8"/>
+      <stop offset="100%" stop-color="#a96d16"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="80" fill="#063d2d"/>
+
+  <circle
+    cx="256"
+    cy="256"
+    r="225"
+    fill="none"
+    stroke="url(#gold)"
+    stroke-width="12"
+  />
+
+  <!-- Crown -->
+  <path
+    d="M165 190 L185 125 L220 155 L256 105 L292 155 L327 125 L347 190
+       Q256 225 165 190Z"
+    fill="url(#gold)"
+    stroke="#8d5b15"
+    stroke-width="5"
+  />
+
+  <path
+    d="M178 190 Q256 220 334 190 L325 220 Q256 245 187 220Z"
+    fill="url(#gold)"
+  />
+
+  <!-- K -->
+  <path
+    d="M145 285 L145 410
+       M145 350 L235 275
+       M180 350 L245 410"
+    fill="none"
+    stroke="url(#gold)"
+    stroke-width="25"
+    stroke-linecap="square"
+    stroke-linejoin="miter"
+  />
+
+  <!-- Q -->
+  <ellipse
+    cx="310"
+    cy="345"
+    rx="78"
+    ry="70"
+    fill="none"
+    stroke="url(#gold)"
+    stroke-width="24"
+  />
+
+  <path
+    d="M350 390 L395 430"
+    fill="none"
+    stroke="url(#gold)"
+    stroke-width="24"
+    stroke-linecap="round"
+  />
+</svg>
