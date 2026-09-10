@@ -1,66 +1,142 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 512 512"
+  width="512"
+  height="512"
+>
   <defs>
-    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#fff1b0"/>
-      <stop offset="25%" stop-color="#d9a441"/>
-      <stop offset="55%" stop-color="#fff0a8"/>
-      <stop offset="100%" stop-color="#a96d16"/>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8C641C"/>
+      <stop offset="28%" stop-color="#F4D58A"/>
+      <stop offset="50%" stop-color="#FFF2B8"/>
+      <stop offset="72%" stop-color="#C99732"/>
+      <stop offset="100%" stop-color="#7A5012"/>
+    </linearGradient>
+
+    <linearGradient id="green" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B4A36"/>
+      <stop offset="100%" stop-color="#02291F"/>
     </linearGradient>
   </defs>
 
-  <rect width="512" height="512" rx="80" fill="#063d2d"/>
+  <!-- Luxury emerald background -->
+  <rect
+    width="512"
+    height="512"
+    rx="96"
+    fill="url(#green)"
+  />
 
-  <circle
-    cx="256"
-    cy="256"
-    r="225"
+  <!-- Outer gold frame -->
+  <rect
+    x="30"
+    y="30"
+    width="452"
+    height="452"
+    rx="82"
     fill="none"
     stroke="url(#gold)"
-    stroke-width="12"
+    stroke-width="8"
+  />
+
+  <!-- Inner frame -->
+  <rect
+    x="48"
+    y="48"
+    width="416"
+    height="416"
+    rx="68"
+    fill="none"
+    stroke="#D9B45A"
+    stroke-opacity="0.35"
+    stroke-width="2"
   />
 
   <!-- Crown -->
   <path
-    d="M165 190 L185 125 L220 155 L256 105 L292 155 L327 125 L347 190
-       Q256 225 165 190Z"
-    fill="url(#gold)"
-    stroke="#8d5b15"
-    stroke-width="5"
+    d="
+      M151 173
+      L166 112
+      L211 143
+      L256 91
+      L301 143
+      L346 112
+      L361 173
+      Q256 208 151 173
+      Z
+    "
+    fill="none"
+    stroke="url(#gold)"
+    stroke-width="11"
+    stroke-linejoin="round"
   />
 
+  <!-- Crown base -->
   <path
-    d="M178 190 Q256 220 334 190 L325 220 Q256 245 187 220Z"
+    d="
+      M160 174
+      Q256 204 352 174
+      L341 204
+      Q256 229 171 204
+      Z
+    "
     fill="url(#gold)"
   />
 
   <!-- K -->
   <path
-    d="M145 285 L145 410
-       M145 350 L235 275
-       M180 350 L245 410"
+    d="
+      M145 246
+      L145 397
+
+      M145 323
+      L235 244
+
+      M184 326
+      L244 397
+    "
     fill="none"
-    stroke="url(#gold)"
-    stroke-width="25"
-    stroke-linecap="square"
-    stroke-linejoin="miter"
+    stroke="#F7E6A4"
+    stroke-width="23"
+    stroke-linecap="round"
+    stroke-linejoin="round"
   />
 
   <!-- Q -->
   <ellipse
-    cx="310"
-    cy="345"
-    rx="78"
-    ry="70"
+    cx="320"
+    cy="321"
+    rx="66"
+    ry="76"
     fill="none"
-    stroke="url(#gold)"
-    stroke-width="24"
+    stroke="#F7E6A4"
+    stroke-width="23"
   />
 
+  <!-- Q tail -->
   <path
-    d="M350 390 L395 430"
+    d="
+      M347 372
+      L397 419
+    "
     fill="none"
-    stroke="url(#gold)"
-    stroke-width="24"
+    stroke="#F7E6A4"
+    stroke-width="23"
     stroke-linecap="round"
+  />
+
+  <!-- Small luxury divider -->
+  <path
+    d="M205 430 H307"
+    stroke="url(#gold)"
+    stroke-width="5"
+    stroke-linecap="round"
+  />
+
+  <!-- Tiny center diamond -->
+  <path
+    d="M256 420 L264 428 L256 436 L248 428 Z"
+    fill="#F4D58A"
   />
 </svg>
