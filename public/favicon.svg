@@ -1,116 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 512 512"
-     width="512"
-     height="512">
-
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 512 512"
+  width="512"
+  height="512"
+>
   <defs>
-
     <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#8A5A16"/>
-      <stop offset="0.18" stop-color="#D7A943"/>
-      <stop offset="0.42" stop-color="#FFF0A6"/>
-      <stop offset="0.58" stop-color="#D9AA45"/>
-      <stop offset="0.82" stop-color="#A96F1C"/>
-      <stop offset="1" stop-color="#F1D47A"/>
+      <stop offset="0%" stop-color="#8B641F"/>
+      <stop offset="28%" stop-color="#D8B45A"/>
+      <stop offset="50%" stop-color="#F7E5A0"/>
+      <stop offset="72%" stop-color="#C99B3E"/>
+      <stop offset="100%" stop-color="#8B641F"/>
     </linearGradient>
 
-    <linearGradient id="goldLight" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#B67A20"/>
-      <stop offset="0.5" stop-color="#FFF1AE"/>
-      <stop offset="1" stop-color="#B77A20"/>
+    <linearGradient id="gold2" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#A87522"/>
+      <stop offset="50%" stop-color="#F4D77C"/>
+      <stop offset="100%" stop-color="#A87522"/>
     </linearGradient>
-
-    <radialGradient id="black" cx="50%" cy="40%" r="75%">
-      <stop offset="0" stop-color="#171717"/>
-      <stop offset="0.7" stop-color="#070707"/>
-      <stop offset="1" stop-color="#000000"/>
-    </radialGradient>
-
-    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="2.5" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-
   </defs>
 
-  <!-- Background -->
+  <!-- Deep luxury background -->
   <rect
-    x="0"
-    y="0"
     width="512"
     height="512"
-    rx="82"
-    fill="url(#black)"
+    rx="96"
+    fill="#070707"
   />
 
-  <!-- Luxury border -->
+  <!-- Thin couture frame -->
   <rect
-    x="25"
-    y="25"
-    width="462"
-    height="462"
-    rx="75"
+    x="28"
+    y="28"
+    width="456"
+    height="456"
+    rx="82"
     fill="none"
     stroke="url(#gold)"
-    stroke-width="7"
+    stroke-width="5"
   />
 
+  <!-- Inner frame -->
   <rect
-    x="37"
-    y="37"
-    width="438"
-    height="438"
-    rx="64"
+    x="43"
+    y="43"
+    width="426"
+    height="426"
+    rx="70"
     fill="none"
-    stroke="#D4A646"
-    stroke-opacity=".28"
-    stroke-width="1.5"
+    stroke="#D8B45A"
+    stroke-opacity=".22"
+    stroke-width="2"
   />
 
-  <!-- Crown -->
-  <g fill="url(#gold)" filter="url(#softGlow)">
+  <!-- Integrated crown -->
+  <path
+    d="
+      M170 181
+      L188 126
+      L225 155
+      L256 111
+      L287 155
+      L324 126
+      L342 181
+      Z
+    "
+    fill="none"
+    stroke="url(#gold2)"
+    stroke-width="10"
+    stroke-linejoin="round"
+  />
 
-    <path d="
-      M163 178
-      L174 126
-      L216 151
-      L256 103
-      L296 151
-      L338 126
-      L349 178
-      Q256 205 163 178
-      Z"/>
-
-    <path d="
-      M169 177
-      Q256 202 343 177
-      L337 198
-      Q256 222 175 198
-      Z"/>
-
-  </g>
-
-  <!-- Crown jewels -->
-  <circle cx="256" cy="139" r="5" fill="#FFF4BD"/>
-  <circle cx="214" cy="164" r="4" fill="#E6C45D"/>
-  <circle cx="298" cy="164" r="4" fill="#E6C45D"/>
+  <!-- Crown base -->
+  <path
+    d="M174 181 Q256 203 338 181"
+    fill="none"
+    stroke="url(#gold2)"
+    stroke-width="9"
+    stroke-linecap="round"
+  />
 
   <!-- K -->
   <path
     d="
-      M145 247
-      L145 394
-      M145 321
-      L232 244
-      M178 326
-      L242 394
+      M145 238
+      L145 399
+
+      M145 322
+      L230 238
+
+      M178 316
+      L242 399
     "
     fill="none"
-    stroke="url(#goldLight)"
+    stroke="url(#gold)"
     stroke-width="25"
     stroke-linecap="square"
     stroke-linejoin="miter"
@@ -119,41 +103,37 @@
   <!-- Q -->
   <path
     d="
-      M315 247
-      C267 247 244 280 244 322
-      C244 365 268 397 315 397
-      C362 397 387 365 387 322
-      C387 280 362 247 315 247
+      M321 239
+      C274 239 247 271 247 319
+      C247 368 274 399 321 399
+      C368 399 395 368 395 319
+      C395 271 368 239 321 239
       Z
     "
     fill="none"
-    stroke="url(#goldLight)"
-    stroke-width="23"
+    stroke="url(#gold)"
+    stroke-width="24"
   />
 
-  <!-- Q signature tail -->
+  <!-- Q tail -->
   <path
     d="
-      M342 367
-      C360 388 377 404 405 421
+      M349 367
+      L405 416
     "
     fill="none"
-    stroke="url(#goldLight)"
-    stroke-width="22"
+    stroke="url(#gold)"
+    stroke-width="23"
     stroke-linecap="round"
   />
 
-  <!-- Subtle KQ intersection -->
+  <!-- Small couture divider -->
   <path
-    d="
-      M177 326
-      L231 278
-      C244 266 253 256 267 250
-    "
-    fill="none"
-    stroke="#FFF0A6"
-    stroke-width="4"
-    stroke-opacity=".65"
+    d="M203 424 H309"
+    stroke="#D8B45A"
+    stroke-width="3"
+    stroke-linecap="round"
+    opacity=".7"
   />
 
 </svg>
